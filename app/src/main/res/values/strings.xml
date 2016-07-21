@@ -6,4 +6,11 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_profile_detail">Welcome, </string>
+    <string name="error_sign_in_fail">Wrong username or password</string>
+    <string name="error_username_password_blank">Please fill in username and password</string>
+    <string name="title_username">Username</string>
+    <string name="title_password">Password</string>
+    <string name="action_login">Login</string>
+    <string name="action_logout">Logout</string>
 </resources>

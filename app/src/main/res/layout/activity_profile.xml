@@ -9,8 +9,8 @@
     tools:context="com.example.ttphong.loginapplication.MainActivity">
 
     <TextView
-        android:id="@+id/profile_tv"
-        android:text="Welcome, "
+        android:id="@+id/tv_profile"
+        android:text="@string/title_profile_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -18,7 +18,7 @@
         android:onClick="onLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Logout"
-        android:id="@+id/logout_btn" />
+        android:text="@string/action_logout"
+        android:id="@+id/btn_logout" />
 
 </LinearLayout>

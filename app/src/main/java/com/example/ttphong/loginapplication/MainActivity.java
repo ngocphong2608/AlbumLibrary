@@ -22,9 +22,13 @@ import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String username = "thanhphong";
-    private String password = "123456";
+    private final String MY_RESOURCE_FILE = "/my_resource.dat";
+    private String userName = "thanhphong";
+    private String passWord = "123456";
     private boolean status = false;
+    private TextView tv_profile_detail;
+    private EditText edt_userName;
+    private EditText edt_passWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (isUserLogin()) {
             setContentView(R.layout.activity_profile);
-            // display username
-            TextView tv = (TextView)findViewById(R.id.profile_tv);
-            tv.setText("Welcome, " + username);
+            // display userName
+            tv_profile_detail = (TextView)findViewById(R.id.tv_profile);
+            tv_profile_detail.setText(getString(R.string.title_profile_detail) + " " + userName);
         } else {
             setContentView(R.layout.activity_login);
         }
@@ -44,29 +48,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-
         saveResource();
     }
 
     private void saveResource() {
         File file = getFilesDir();
-
         String path = file.getAbsolutePath();
-
-        File resourceFile = new File(path + "/my_resource.dat");
+        File resourceFile = new File(path + MY_RESOURCE_FILE);
 
         try {
             ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream(resourceFile));
             MyResource res = new MyResource();
-
-            res.username = username;
-            res.password = password;
+            res.userName = userName;
+            res.passWord = passWord;
             res.status = status;
-
             obj.writeObject(res);
-
             obj.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,29 +72,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-
         saveResource();
     }
 
     private void loadResource() {
         File file = getFilesDir();
-
         String path = file.getAbsolutePath();
-
-        File resourceFile = new File(path + "/my_resource.dat");
+        File resourceFile = new File(path + MY_RESOURCE_FILE);
 
         if (resourceFile.exists()) {
-
             try {
                 ObjectInputStream obj = new ObjectInputStream(new FileInputStream(resourceFile));
                 MyResource res = (MyResource)obj.readObject();
-
-                username = res.username;
-                password = res.password;
+                userName = res.userName;
+                passWord = res.passWord;
                 status = res.status;
-
                 obj.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -133,22 +123,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLogin(View view) {
-        String username = ((EditText)findViewById(R.id.username_et)).getText().toString().toLowerCase();
-        String password = ((EditText)findViewById(R.id.password_et)).getText().toString();
+        edt_userName = (EditText)findViewById(R.id.edt_username);
+        edt_passWord = (EditText)findViewById(R.id.edt_password);
 
-        if (username.contentEquals("") || password.contentEquals("")) {
-            Toast.makeText(this, "Please fill in username and password", Toast.LENGTH_SHORT).show();
-        } else if (matchPassword(username, password)) {
+        String userName = edt_userName.getText().toString().toLowerCase();
+        String passWord = edt_passWord.getText().toString();
+
+        if (userName.contentEquals("") || passWord.contentEquals("")) {
+            Toast.makeText(this, getString(R.string.error_username_password_blank), Toast.LENGTH_SHORT).show();
+        } else if (matchPassWord(userName, passWord)) {
             // update user status
             updateUserStatus(true);
-
             setContentView(R.layout.activity_profile);
-
-            // display username
-            TextView tv = (TextView)findViewById(R.id.profile_tv);
-            tv.setText("Welcome, " + username);
+            // display userName
+            tv_profile_detail = (TextView)findViewById(R.id.tv_profile);
+            tv_profile_detail.setText(getString(R.string.title_profile_detail) + " " + userName);
         } else {
-            Toast.makeText(this, "Wrong username or password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_sign_in_fail), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -156,14 +147,13 @@ public class MainActivity extends AppCompatActivity {
         this.status = status;
     }
 
-    private boolean matchPassword(String username, String password) {
-        return this.username.contentEquals(username) && this.password.contentEquals(password);
+    private boolean matchPassWord(String userName, String passWord) {
+        return this.userName.contentEquals(userName) && this.passWord.contentEquals(passWord);
     }
 
     public void onLogout(View view) {
         // update user status
         updateUserStatus(false);
-
         setContentView(R.layout.activity_login);
     }
 }
