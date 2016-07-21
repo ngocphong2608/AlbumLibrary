@@ -3,6 +3,7 @@ package com.example.ttphong.loginapplication;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,25 +20,22 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+public class MainActivity extends AppCompatActivity {
 
-public class MainActivity extends ActionBarActivity {
-
-    String Username = "thanhphong";
-    String Password = "123456";
-    boolean Status = false;
+    private String username = "thanhphong";
+    private String password = "123456";
+    private boolean status = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         loadResource();
 
         if (isUserLogin()) {
             setContentView(R.layout.activity_profile);
-
             // display username
             TextView tv = (TextView)findViewById(R.id.profile_tv);
-            tv.setText("Wellcome, " + Username);
+            tv.setText("Welcome, " + username);
         } else {
             setContentView(R.layout.activity_login);
         }
@@ -61,9 +59,9 @@ public class MainActivity extends ActionBarActivity {
             ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream(resourceFile));
             MyResource res = new MyResource();
 
-            res.username = Username;
-            res.password = Password;
-            res.status = Status;
+            res.username = username;
+            res.password = password;
+            res.status = status;
 
             obj.writeObject(res);
 
@@ -94,9 +92,9 @@ public class MainActivity extends ActionBarActivity {
                 ObjectInputStream obj = new ObjectInputStream(new FileInputStream(resourceFile));
                 MyResource res = (MyResource)obj.readObject();
 
-                Username = res.username;
-                Password = res.password;
-                Status = res.status;
+                username = res.username;
+                password = res.password;
+                status = res.status;
 
                 obj.close();
 
@@ -109,7 +107,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private boolean isUserLogin() {
-        return Status;
+        return status;
     }
 
     @Override
@@ -148,18 +146,18 @@ public class MainActivity extends ActionBarActivity {
 
             // display username
             TextView tv = (TextView)findViewById(R.id.profile_tv);
-            tv.setText("Wellcome, " + Username);
+            tv.setText("Welcome, " + username);
         } else {
             Toast.makeText(this, "Wrong username or password", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updateUserStatus(boolean status) {
-        Status = status;
+        this.status = status;
     }
 
     private boolean matchPassword(String username, String password) {
-        return Username.contentEquals(username) && Password.contentEquals(password);
+        return this.username.contentEquals(username) && this.password.contentEquals(password);
     }
 
     public void onLogout(View view) {
