@@ -14,14 +14,14 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private static final String PREF_USERNAME = "PREF_USERNAME";
-    private static final String PREF_ENCRYPTED_PASSWORD = "PREF_ENCRYPTED_PASSWORD";
+    private static final String PREF_PASSWORD_HASHING = "PREF_PASSWORD_HASHING";
     private static final String PREF_STATUS = "PREF_STATUS";
     private final String DEFAULT_USERNAME = "thanhphong";
     private final String DEFAULT_PASSWORD = "123456";
     private final boolean DEFAULT_STATUS = false;
-    private String mUserName = DEFAULT_USERNAME;
-    private String mPassWord = DEFAULT_PASSWORD;
-    private boolean mStatus = DEFAULT_STATUS;
+    private String mUserName;
+    private String mPassWordHashing;
+    private boolean mStatus;
     private TextView tv_profileDetail;
     private EditText edt_userName;
     private EditText edt_passWord;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_profile);
         // display mUserName
         tv_profileDetail = (TextView)findViewById(R.id.tv_profile);
-        tv_profileDetail.setText(getString(R.string.title_profile_detail) + " " + mUserName);
+        tv_profileDetail.setText(String.format(getString(R.string.title_profile_detail), mUserName));
         // onclick logout
         btn_logout = (Button)findViewById(R.id.btn_logout);
         btn_logout.setOnClickListener(new View.OnClickListener() {
@@ -99,12 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadSharedPreferences(){
         SharedPreferences pref = getPreferences(MODE_PRIVATE);
-        this.mUserName = pref.getString(PREF_USERNAME, this.mUserName);
-        String encryptedPass = pref.getString(PREF_ENCRYPTED_PASSWORD, null);
-        this.mStatus = pref.getBoolean(PREF_STATUS, this.mStatus);
+        this.mUserName = pref.getString(PREF_USERNAME, DEFAULT_USERNAME);
+        this.mPassWordHashing = pref.getString(PREF_PASSWORD_HASHING, null);
+        this.mStatus = pref.getBoolean(PREF_STATUS, DEFAULT_STATUS);
 
-        if (encryptedPass != null) {
-            this.mPassWord = decryptPassWord(encryptedPass);
+        if (this.mPassWordHashing == null){
+            this.mPassWordHashing = MD5Hashing.computeHash(DEFAULT_PASSWORD);
         }
     }
 
@@ -112,26 +112,16 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor edit = pref.edit();
         edit.putString(PREF_USERNAME, this.mUserName);
-        edit.putString(PREF_ENCRYPTED_PASSWORD, encryptPassWord(this.mPassWord));
+        edit.putString(PREF_PASSWORD_HASHING, this.mPassWordHashing);
         edit.putBoolean(PREF_STATUS, this.mStatus);
         edit.commit();
-    }
-
-    private String encryptPassWord(String passWord) {
-        // dummy
-        return passWord;
-    }
-
-    private String decryptPassWord(String encryptedPass){
-        // dummy
-        return encryptedPass;
     }
 
     private boolean isUserLogin() {
         return this.mStatus;
     }
 
-    public void onLoginClicked() {
+    private void onLoginClicked() {
         String userName = edt_userName.getText().toString().toLowerCase();
         String passWord = edt_passWord.getText().toString();
 
@@ -151,10 +141,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean matchPassWord(String userName, String passWord) {
-        return this.mUserName.contentEquals(userName) && this.mPassWord.contentEquals(passWord);
+        String passHash = MD5Hashing.computeHash(passWord);
+        return this.mUserName.contentEquals(userName) && this.mPassWordHashing.contentEquals(passHash);
     }
 
-    public void onLogoutClicked() {
+    private void onLogoutClicked() {
         // update user status
         updateUserStatus(false);
         doLogout();
