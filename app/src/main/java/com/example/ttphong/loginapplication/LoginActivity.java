@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doLogin() {
-        Intent intent = new Intent(this, AlbumActivity.class);
+        Intent intent = new Intent(this, ListAlbumsActivity.class);
         startActivity(intent);
         finish();
     }

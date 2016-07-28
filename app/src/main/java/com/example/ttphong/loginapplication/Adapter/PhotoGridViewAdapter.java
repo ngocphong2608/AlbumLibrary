@@ -2,6 +2,7 @@ package com.example.ttphong.loginapplication.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,12 @@ import java.util.ArrayList;
 /**
  * Created by ttphong on 7/28/2016.
  */
-public class AlbumGridViewAdapter extends ArrayAdapter {
+public class PhotoGridViewAdapter extends ArrayAdapter{
     private Context mContext;
     private int mLayoutResourceId;
     private ArrayList mData = new ArrayList();
 
-    public AlbumGridViewAdapter(Context context, int resource, ArrayList data) {
+    public PhotoGridViewAdapter(Context context, int resource, ArrayList data) {
         super(context, resource, data);
         this.mLayoutResourceId = resource;
         this.mContext = context;
@@ -32,27 +33,18 @@ public class AlbumGridViewAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ViewHolder holder;
+        ImageView holder;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             row = inflater.inflate(mLayoutResourceId, parent, false);
-            holder = new ViewHolder();
-            holder.imageTitle = (TextView) row.findViewById(R.id.text_album);
-            holder.image = (ImageView) row.findViewById(R.id.image_album);
+            holder = (ImageView) row.findViewById(R.id.image_photo);
             row.setTag(holder);
         } else {
-            holder = (ViewHolder) row.getTag();
+            holder = (ImageView) row.getTag();
         }
-
-        AlbumImageItem item = (AlbumImageItem)mData.get(position);
-        holder.imageTitle.setText(item.getTitle());
-        holder.image.setImageBitmap(item.getImage());
+        Bitmap item = (Bitmap) mData.get(position);
+        holder.setImageBitmap(item);
         return row;
-    }
-
-    private class ViewHolder {
-        TextView imageTitle;
-        ImageView image;
     }
 }

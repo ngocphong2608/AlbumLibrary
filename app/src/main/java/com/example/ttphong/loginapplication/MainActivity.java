@@ -3,8 +3,6 @@ package com.example.ttphong.loginapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void doLogin() {
-        Intent intent = new Intent(this, AlbumActivity.class);
+        Intent intent = new Intent(this, ListAlbumsActivity.class);
         startActivity(intent);
         finish();
     }
