@@ -13,7 +13,12 @@
     <string name="action_logout">Logout</string>
     <string name="action_add_album">New Album</string>
     <string name="action_delete_album">Delete Album</string>
+    <string name="action_add_photo">New Photo</string>
+    <string name="action_delete_photo">Delete Photo</string>
     <string name="action_ok">Ok</string>
     <string name="action_cancel">Cancel</string>
     <string name="error_album_name_blank">Please enter a new album name</string>
+    <string name="action_new_photo_from_gallery">Gallery</string>
+    <string name="action_new_photo_from_camera">Camera</string>
+    <string name="title_photo_dialog">Choose an option</string>
 </resources>

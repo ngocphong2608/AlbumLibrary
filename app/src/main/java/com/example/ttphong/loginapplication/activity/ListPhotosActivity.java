@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.ttphong.loginapplication.DTO.Album;
 import com.example.ttphong.loginapplication.DTO.User;
@@ -20,6 +21,7 @@ import com.example.ttphong.loginapplication.DTO.Photo;
 import com.example.ttphong.loginapplication.R;
 import com.example.ttphong.loginapplication.SharedPreferencesHelper;
 import com.example.ttphong.loginapplication.adapter.PhotoGridViewAdapter;
+import com.example.ttphong.loginapplication.dialog.NewAlbumDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +101,11 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.action_add_photo) {
+            NewAlbumDialog dlg = new NewAlbumDialog(this);
+            dlg.show();
+        } else if (id == R.id.action_delete_photo) {
+            Toast.makeText(this, "Method is not implemented yet", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
