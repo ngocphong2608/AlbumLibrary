@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.ttphong.loginapplication.DTO.Album;
 import com.example.ttphong.loginapplication.AlbumImageItem;
@@ -19,11 +20,12 @@ import com.example.ttphong.loginapplication.MyDatabaseHelper;
 import com.example.ttphong.loginapplication.R;
 import com.example.ttphong.loginapplication.SharedPreferencesHelper;
 import com.example.ttphong.loginapplication.adapter.AlbumGridViewAdapter;
+import com.example.ttphong.loginapplication.dialog.NewAlbumDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListAlbumsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class ListAlbumsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, NewAlbumDialog.OnDialogOkListener{
     private GridView mGridView;
     private AlbumGridViewAdapter mGridAdapter;
     private MyDatabaseHelper mHelper;
@@ -41,7 +43,6 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
         // database
         mHelper = new MyDatabaseHelper(this);
         mHelper.createDefaultAlbumsIfNeed();
-        mAlbumList = mHelper.getAllAlbums();
         // load default bitmap for album
         loadDefaultAlbumBitmap();
         // set gridview adapter
@@ -69,7 +70,6 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             // update user status
             mUser.setStatus(false);
@@ -78,9 +78,19 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.action_add_album) {
+            NewAlbumDialog dlg = new NewAlbumDialog(this);
+            dlg.show();
+        } else if (id == R.id.action_delete_album) {
+            Toast.makeText(this, "Method is not implemented yet", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateAlbumGridView() {
+        mGridAdapter = new AlbumGridViewAdapter(this, R.layout.item_album, getData());
+        mGridView.setAdapter(mGridAdapter);
     }
 
     @Override
@@ -93,6 +103,7 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
     }
 
     private ArrayList getData() {
+        mAlbumList = mHelper.getAllAlbums();
         ArrayList<AlbumImageItem> imageItems = new ArrayList<>();
 
         for (Album album : mAlbumList) {
@@ -100,5 +111,12 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
             imageItems.add(item);
         }
         return imageItems;
+    }
+
+    @Override
+    public void OnDialogOkListener(String albumName) {
+        Album album = new Album(albumName);
+        mHelper.addAlbum(album);
+        updateAlbumGridView();
     }
 }

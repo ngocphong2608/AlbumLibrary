@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">LoginApplication</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Photo Library</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_main">MainActivity</string>
@@ -13,4 +11,9 @@
     <string name="title_password">Password</string>
     <string name="action_login">Login</string>
     <string name="action_logout">Logout</string>
+    <string name="action_add_album">New Album</string>
+    <string name="action_delete_album">Delete Album</string>
+    <string name="action_ok">Ok</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="error_album_name_blank">Please enter a new album name</string>
 </resources>
