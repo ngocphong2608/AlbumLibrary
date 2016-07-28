@@ -1,4 +1,4 @@
-package com.example.ttphong.loginapplication;
+package com.example.ttphong.loginapplication.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,7 +12,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.example.ttphong.loginapplication.Adapter.AlbumGridViewAdapter;
+import com.example.ttphong.loginapplication.DTO.Album;
+import com.example.ttphong.loginapplication.AlbumImageItem;
+import com.example.ttphong.loginapplication.DTO.User;
+import com.example.ttphong.loginapplication.MyDatabaseHelper;
+import com.example.ttphong.loginapplication.R;
+import com.example.ttphong.loginapplication.SharedPreferencesHelper;
+import com.example.ttphong.loginapplication.adapter.AlbumGridViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +29,15 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
     private MyDatabaseHelper mHelper;
     private List<Album> mAlbumList;
     private Bitmap mDefaultBitmap;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
 
+        // get user from shared preferences
+        mUser = SharedPreferencesHelper.loadSharedPreferences(this);
         // database
         mHelper = new MyDatabaseHelper(this);
         mHelper.createDefaultAlbumsIfNeed();
@@ -62,6 +71,10 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
+            // update user status
+            mUser.setStatus(false);
+            SharedPreferencesHelper.updateSharedPreferences(this, mUser);
+            // start LoginActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();

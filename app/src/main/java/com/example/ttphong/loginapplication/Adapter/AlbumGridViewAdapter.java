@@ -1,4 +1,4 @@
-package com.example.ttphong.loginapplication.Adapter;
+package com.example.ttphong.loginapplication.adapter;
 
 import android.app.Activity;
 import android.content.Context;

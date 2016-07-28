@@ -1,4 +1,4 @@
-package com.example.ttphong.loginapplication;
+package com.example.ttphong.loginapplication.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.ttphong.loginapplication.MD5Hashing;
+import com.example.ttphong.loginapplication.R;
+import com.example.ttphong.loginapplication.SharedPreferencesHelper;
+import com.example.ttphong.loginapplication.DTO.User;
 
 public class LoginActivity extends AppCompatActivity {
 

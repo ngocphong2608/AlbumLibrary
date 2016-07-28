@@ -1,8 +1,11 @@
-package com.example.ttphong.loginapplication;
+package com.example.ttphong.loginapplication.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.ttphong.loginapplication.SharedPreferencesHelper;
+import com.example.ttphong.loginapplication.DTO.User;
 
 public class MainActivity extends AppCompatActivity {
 

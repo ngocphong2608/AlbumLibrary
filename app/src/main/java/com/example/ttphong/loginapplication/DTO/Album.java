@@ -1,4 +1,4 @@
-package com.example.ttphong.loginapplication;
+package com.example.ttphong.loginapplication.DTO;
 
 import java.io.Serializable;
 

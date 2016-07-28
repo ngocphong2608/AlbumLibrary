@@ -1,4 +1,4 @@
-package com.example.ttphong.loginapplication;
+package com.example.ttphong.loginapplication.DTO;
 
 /**
  * Created by ttphong on 7/28/2016.

@@ -1,4 +1,4 @@
-package com.example.ttphong.loginapplication;
+package com.example.ttphong.loginapplication.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
-import com.example.ttphong.loginapplication.Adapter.PhotoGridViewAdapter;
+import com.example.ttphong.loginapplication.DTO.Album;
+import com.example.ttphong.loginapplication.DTO.User;
+import com.example.ttphong.loginapplication.MyDatabaseHelper;
+import com.example.ttphong.loginapplication.DTO.Photo;
+import com.example.ttphong.loginapplication.R;
+import com.example.ttphong.loginapplication.SharedPreferencesHelper;
+import com.example.ttphong.loginapplication.adapter.PhotoGridViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,7 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
     private Bitmap mDefaultPhoto;
     private MyDatabaseHelper mHelper;
     private List<Photo> mPhotoList;
+    private User mUser;
 
     public static Intent getIntent(Context context, Album album) {
         Intent intent = new Intent(context, ListPhotosActivity.class);
@@ -42,6 +48,8 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
         // get album from intent
         Intent intent = getIntent();
         mAlbum  = (Album)intent.getSerializableExtra(EXTRA_ALBUM);
+        // get user from shared preferences
+        mUser = SharedPreferencesHelper.loadSharedPreferences(this);
         // load default photo
         loadDefaultPhoto();
         // init database
@@ -85,6 +93,9 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
+            // update user status
+            mUser.setStatus(false);
+            SharedPreferencesHelper.updateSharedPreferences(this, mUser);
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -95,6 +106,6 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        
+        startActivity(PhotoViewingActivity.getIntent(this, mPhotoList.get(i)));
     }
 }

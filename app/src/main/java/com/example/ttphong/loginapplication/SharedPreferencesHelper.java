@@ -3,6 +3,8 @@ package com.example.ttphong.loginapplication;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.ttphong.loginapplication.DTO.User;
+
 /**
  * Created by ttphong on 7/28/2016.
  */

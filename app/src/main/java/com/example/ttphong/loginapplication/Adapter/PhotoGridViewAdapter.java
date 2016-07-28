@@ -1,4 +1,4 @@
-package com.example.ttphong.loginapplication.Adapter;
+package com.example.ttphong.loginapplication.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.example.ttphong.loginapplication.AlbumImageItem;
 import com.example.ttphong.loginapplication.R;
 
 import java.util.ArrayList;
