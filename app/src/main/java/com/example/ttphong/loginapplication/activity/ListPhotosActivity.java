@@ -1,9 +1,12 @@
 package com.example.ttphong.loginapplication.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.ttphong.loginapplication.BitmapHelper;
 import com.example.ttphong.loginapplication.DTO.Album;
 import com.example.ttphong.loginapplication.DTO.User;
 import com.example.ttphong.loginapplication.MyDatabaseHelper;
@@ -21,19 +25,23 @@ import com.example.ttphong.loginapplication.DTO.Photo;
 import com.example.ttphong.loginapplication.R;
 import com.example.ttphong.loginapplication.SharedPreferencesHelper;
 import com.example.ttphong.loginapplication.adapter.PhotoGridViewAdapter;
-import com.example.ttphong.loginapplication.dialog.NewAlbumDialog;
+import com.example.ttphong.loginapplication.dialog.NewPhotoDialog;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPhotosActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class ListPhotosActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, NewPhotoDialog.NewPhotoDialogListener{
 
     private static final String EXTRA_ALBUM = "EXTRA_ALBUM";
+    private static final int REQUEST_CAMERA = 1000;
+    private static final int REQUEST_GALLERY = 1001;
     private Album mAlbum;
     private GridView gv_listPhotos;
     private PhotoGridViewAdapter mGridViewAdapter;
     private Bitmap mDefaultPhoto;
-    private MyDatabaseHelper mHelper;
+    private MyDatabaseHelper mDbHelper;
     private List<Photo> mPhotoList;
     private User mUser;
 
@@ -55,8 +63,8 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
         // load default photo
         loadDefaultPhoto();
         // init database
-        mHelper = new MyDatabaseHelper(this);
-        mPhotoList = mHelper.getAllPhotos(mAlbum);
+        mDbHelper = new MyDatabaseHelper(this);
+        mPhotoList = mDbHelper.getAllPhotos(mAlbum);
         // set toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.tb_list_photos);
         setSupportActionBar(toolbar);
@@ -74,9 +82,19 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
     private ArrayList getData() {
         ArrayList<Bitmap> arrayList = new ArrayList<>();
         for (Photo photo : mPhotoList) {
-            arrayList.add(mDefaultPhoto);
+            arrayList.add(loadBitmap(photo));
         }
         return arrayList;
+    }
+
+    private Bitmap loadBitmap(Photo photo) {
+        File file = new File(photo.getUrl());
+
+        if (file.exists()) {
+            return BitmapHelper.loadBitmap(photo.getUrl());
+        } else {
+            return mDefaultPhoto;
+        }
     }
 
     @Override
@@ -102,7 +120,7 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
             startActivity(intent);
             finish();
         } else if (id == R.id.action_add_photo) {
-            NewAlbumDialog dlg = new NewAlbumDialog(this);
+            NewPhotoDialog dlg = new NewPhotoDialog(this);
             dlg.show();
         } else if (id == R.id.action_delete_photo) {
             Toast.makeText(this, "Method is not implemented yet", Toast.LENGTH_SHORT).show();
@@ -114,5 +132,68 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         startActivity(PhotoViewingActivity.getIntent(this, mPhotoList.get(i)));
+    }
+
+    @Override
+    public void OnGalleryClicked() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
+    }
+
+    @Override
+    public void OnCameraClicked() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_GALLERY)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCapturePhotoResult(data);
+        }
+    }
+
+    private void onCapturePhotoResult(Intent data) {
+        Bitmap bm = (Bitmap) data.getExtras().get("data");
+        String path = Environment.getExternalStorageDirectory().toString() + "/" +
+                System.currentTimeMillis() + ".jpg";
+        // store database
+        Photo photo = new Photo(path);
+        mDbHelper.addPhoto(mAlbum, photo);
+        // store image
+        BitmapHelper.saveBitmap(bm, path);
+        // refresh gridView
+        refreshPhotoGridView();
+    }
+
+    private void refreshPhotoGridView() {
+        mPhotoList = mDbHelper.getAllPhotos(mAlbum);
+        mGridViewAdapter = new PhotoGridViewAdapter(this, R.layout.item_photo, getData());
+        gv_listPhotos.setAdapter(mGridViewAdapter);
+    }
+
+    private void onSelectFromGalleryResult(Intent data) {
+        if (data != null) {
+            try {
+                Bitmap bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                String path = Environment.getExternalStorageDirectory().toString() + "/" +
+                        System.currentTimeMillis() + ".jpg";
+                // store database
+                Photo photo = new Photo(path);
+                mDbHelper.addPhoto(mAlbum, photo);
+                // store image
+                BitmapHelper.saveBitmap(bm, path);
+                // refresh gridview
+                refreshPhotoGridView();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

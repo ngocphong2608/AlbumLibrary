@@ -1,6 +1,5 @@
 package com.example.ttphong.loginapplication.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
@@ -23,13 +22,13 @@ public class NewAlbumDialog extends Dialog implements View.OnClickListener {
     private OnDialogOkListener mCallBack;
 
     public interface OnDialogOkListener {
-        void OnDialogOkListener(String albumName);
+        void OnOkClicked(String albumName);
     }
 
     public NewAlbumDialog(Context context) {
         super(context);
         setContentView(R.layout.dialog_new_album);
-        setTitle("Enter a new album name");
+        setTitle(mContext.getString(R.string.title_album_dialog));
 
         mContext = context;
         mCallBack = (ListAlbumsActivity)context;
@@ -45,7 +44,7 @@ public class NewAlbumDialog extends Dialog implements View.OnClickListener {
         if (view.getId() == btn_ok.getId()) {
             String text = edt_albumName.getText().toString();
             if (text.compareTo("") != 0) {
-                mCallBack.OnDialogOkListener(text);
+                mCallBack.OnOkClicked(text);
                 this.dismiss();
             } else {
                 Toast.makeText(mContext, mContext.getString(R.string.error_album_name_blank), Toast.LENGTH_SHORT).show();

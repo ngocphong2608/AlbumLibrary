@@ -114,7 +114,7 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
     }
 
     @Override
-    public void OnDialogOkListener(String albumName) {
+    public void OnOkClicked(String albumName) {
         Album album = new Album(albumName);
         mHelper.addAlbum(album);
         updateAlbumGridView();
