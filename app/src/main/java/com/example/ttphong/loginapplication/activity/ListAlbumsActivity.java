@@ -81,9 +81,10 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
         } else if (id == R.id.action_add_album) {
             NewAlbumDialog dlg = new NewAlbumDialog(this);
             dlg.show();
-        } else if (id == R.id.action_delete_album) {
-            Toast.makeText(this, "Method is not implemented yet", Toast.LENGTH_SHORT).show();
         }
+//        } else if (id == R.id.action_delete_album) {
+//            Toast.makeText(this, "Method is not implemented yet", Toast.LENGTH_SHORT).show();
+//        }
 
         return super.onOptionsItemSelected(item);
     }

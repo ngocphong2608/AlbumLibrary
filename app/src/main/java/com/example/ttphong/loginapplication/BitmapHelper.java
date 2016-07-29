@@ -18,7 +18,7 @@ public class BitmapHelper {
         FileOutputStream fo;
 
         try {
-            boolean ok = file.createNewFile();
+            file.createNewFile();
             fo = new FileOutputStream(file);
             fo.write(bytes.toByteArray());
             fo.close();
