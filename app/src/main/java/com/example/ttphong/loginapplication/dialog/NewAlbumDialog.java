@@ -28,7 +28,7 @@ public class NewAlbumDialog extends Dialog implements View.OnClickListener {
     public NewAlbumDialog(Context context) {
         super(context);
         setContentView(R.layout.dialog_new_album);
-        setTitle(mContext.getString(R.string.title_album_dialog));
+        setTitle(context.getString(R.string.title_album_dialog));
 
         mContext = context;
         mCallBack = (ListAlbumsActivity)context;
