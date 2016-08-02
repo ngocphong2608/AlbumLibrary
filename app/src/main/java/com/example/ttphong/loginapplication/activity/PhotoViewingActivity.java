@@ -47,16 +47,16 @@ public class PhotoViewingActivity extends AppCompatActivity {
         mDefaultPhoto = BitmapFactory.decodeResource(getResources(), R.drawable.ic_photo);
         // display photo
         image_PhotoViewing = (ImageView)findViewById(R.id.image_photo_viewing);
-        image_PhotoViewing.setImageBitmap(loadPhoto());
+        image_PhotoViewing.setImageBitmap(loadFullBitmap());
         // toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.tb_photo_viewing);
         setSupportActionBar(toolbar);
     }
 
-    private Bitmap loadPhoto() {
+    private Bitmap loadFullBitmap() {
         File file = new File(mPhoto.getUrl());
         if (file.exists()) {
-            return BitmapHelper.loadBitmap(mPhoto.getUrl());
+            return BitmapHelper.loadFullBitmap(mPhoto.getUrl());
         } else {
             return mDefaultPhoto;
         }

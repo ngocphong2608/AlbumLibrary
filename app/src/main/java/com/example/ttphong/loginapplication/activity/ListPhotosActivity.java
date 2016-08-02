@@ -40,7 +40,6 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
     private Album mAlbum;
     private GridView gv_listPhotos;
     private PhotoGridViewAdapter mGridViewAdapter;
-    private Bitmap mDefaultPhoto;
     private MyDatabaseHelper mDbHelper;
     private List<Photo> mPhotoList;
     private User mUser;
@@ -60,8 +59,6 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
         mAlbum  = (Album)intent.getSerializableExtra(EXTRA_ALBUM);
         // get user from shared preferences
         mUser = SharedPreferencesHelper.loadSharedPreferences(this);
-        // load default photo
-        loadDefaultPhoto();
         // init database
         mDbHelper = new MyDatabaseHelper(this);
         mPhotoList = mDbHelper.getAllPhotos(mAlbum);
@@ -70,31 +67,9 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
         setSupportActionBar(toolbar);
         // init gridview
         gv_listPhotos = (GridView)findViewById(R.id.gv_photo);
-        mGridViewAdapter = new PhotoGridViewAdapter(this, R.layout.item_photo, getData());
+        mGridViewAdapter = new PhotoGridViewAdapter(this, R.layout.item_photo, new ArrayList(mPhotoList));
         gv_listPhotos.setAdapter(mGridViewAdapter);
         gv_listPhotos.setOnItemClickListener(this);
-    }
-
-    private void loadDefaultPhoto() {
-        mDefaultPhoto = BitmapFactory.decodeResource(getResources(), R.drawable.ic_photo);
-    }
-
-    private ArrayList getData() {
-        ArrayList<Bitmap> arrayList = new ArrayList<>();
-        for (Photo photo : mPhotoList) {
-            arrayList.add(loadBitmap(photo));
-        }
-        return arrayList;
-    }
-
-    private Bitmap loadBitmap(Photo photo) {
-        File file = new File(photo.getUrl());
-
-        if (file.exists()) {
-            return BitmapHelper.loadBitmap(photo.getUrl());
-        } else {
-            return mDefaultPhoto;
-        }
     }
 
     @Override
@@ -174,7 +149,7 @@ public class ListPhotosActivity extends AppCompatActivity implements AdapterView
 
     private void refreshPhotoGridView() {
         mPhotoList = mDbHelper.getAllPhotos(mAlbum);
-        mGridViewAdapter = new PhotoGridViewAdapter(this, R.layout.item_photo, getData());
+        mGridViewAdapter = new PhotoGridViewAdapter(this, R.layout.item_photo, new ArrayList(mPhotoList));
         gv_listPhotos.setAdapter(mGridViewAdapter);
     }
 

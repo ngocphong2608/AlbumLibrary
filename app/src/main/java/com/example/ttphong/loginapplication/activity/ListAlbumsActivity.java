@@ -2,7 +2,6 @@ package com.example.ttphong.loginapplication.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.example.ttphong.loginapplication.BitmapHelper;
 import com.example.ttphong.loginapplication.DTO.Album;
 import com.example.ttphong.loginapplication.AlbumImageItem;
 import com.example.ttphong.loginapplication.DTO.User;
@@ -99,7 +99,8 @@ public class ListAlbumsActivity extends AppCompatActivity implements AdapterView
     }
 
     private void loadDefaultAlbumBitmap() {
-        mDefaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_album);
+        mDefaultBitmap = BitmapHelper.decodeSampledBitmapFromResource(
+                this.getResources(), R.drawable.ic_photo, 100, 100);
     }
 
     private ArrayList getData() {
